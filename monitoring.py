@@ -15,7 +15,11 @@ st.set_page_config(
      layout="wide",
      )
 
-st.title(f"Dundee United - Player Recruitment")
+col1, mid, col2 = st.columns([1,0.5,20])
+with col1:
+    st.image(image1)
+with col2:
+    st.title('Dundee United - Player Recruitment')
 
 st.sidebar.image(image1, use_column_width=False)
 
@@ -364,8 +368,7 @@ with col1:
     st.write("Blue bars represent league average")
     st.pyplot(fig)
 with col2:
-    st.image(image1)
-    st.write("Top 5 Targets")
+    st.title("Top 5 Targets")
     st.write(df3)
     st.write("Compare players:")
     st.pyplot(fig1)
