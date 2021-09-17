@@ -127,10 +127,20 @@ index = df1_2.index
 condition = df1_2["Rank"] == 1
 player_ind = index[condition]
 player_ind=player_ind.tolist()
+if len(player_ind)>0:
+    player_ind=player_ind
+else:
+    player_ind=[0]
 player_ind = int(''.join(str(i) for i in player_ind))
+
+
 condition2 = df1_2["Rank"] == 2
 player_ind2 = index[condition2]
 player_ind2=player_ind2.tolist()
+if len(player_ind2)>0:
+    player_ind2=player_ind2
+else:
+    player_ind2=[1]
 player_ind2 = int(''.join(str(i) for i in player_ind2))
 
 player1 = list(df1_1['Player'].drop_duplicates())
