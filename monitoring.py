@@ -368,7 +368,7 @@ with col1:
     st.write("Blue bars represent league average")
     st.pyplot(fig)
 with col2:
-    st.title("Top 5 Targets")
+    st.subheader("Top 5 Targets")
     st.write(df3)
-    st.write("Compare players:")
+    st.subheader("Compare players:")
     st.pyplot(fig1)
