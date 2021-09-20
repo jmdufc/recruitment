@@ -14,13 +14,15 @@ st.set_page_config(
      page_title="Player Recruitment",
      layout="wide",
      )
-
 col1, mid, col2 = st.columns([1,0.5,20])
 with col1:
     st.image(image1)
 with col2:
     st.title('Dundee United - Player Recruitment')
-
+    
+    
+#st.title(f"Dundee United - Player Recruitment")
+#st.image(image1)
 st.sidebar.image(image1, use_column_width=False)
 
 textc='#1d3557'
@@ -70,14 +72,6 @@ df=df.fillna(0)
 
 
 
-params = [param1,param2,param3,param4,param5,param6,
-                               param7,param8,param9,param10,param11,param12,param13,param14]
-
-params2 = ['Def duels\np90','Def duels\nwon%','PAdj\nInterceptions','Received pass\np90','Passes to\npen area p90','Passes to final\n3rd p90',
-                               'Prog. passes\np90','Accurate\npasses %','Prog runs\np90','Avg pass\nlength (m)',
-                               "% of passes\nprogressive",'xA p90','xG p90','Shots p90']
-
-
 leagues = list(df['League'].drop_duplicates())
 leagues=sorted(leagues)
 league_choice = st.sidebar.selectbox(
@@ -90,8 +84,10 @@ position_choice = st.sidebar.selectbox(
     "Select a position:", positions, index=2)
 df1=df1.loc[(df1['Focus Position'] == position_choice)]
 
+af=df.loc[(df['Focus Position'] == position_choice)]
+
 df1_1=df1.reset_index(drop=True)
-df1_2=df1_1
+#df1_2=df1_1
 
 df2=df1.iloc[:,9:]
 metrics=df2.columns.tolist()
@@ -125,73 +121,7 @@ min_height, max_height = st.sidebar.slider(
 df1=df1.loc[(df1['Height'] >= min_height)]
 df1=df1.loc[(df1['Height'] <= max_height)].reset_index(drop=True)
 
-st.sidebar.write("Choose players to compare:")
-
-index = df1_2.index
-condition = df1_2["Rank"] == 1
-player_ind = index[condition]
-player_ind=player_ind.tolist()
-if len(player_ind)>0:
-    player_ind=player_ind
-else:
-    player_ind=[0]
-player_ind = int(''.join(str(i) for i in player_ind))
-
-
-condition2 = df1_2["Rank"] == 2
-player_ind2 = index[condition2]
-player_ind2=player_ind2.tolist()
-if len(player_ind2)>0:
-    player_ind2=player_ind2
-else:
-    player_ind2=[1]
-player_ind2 = int(''.join(str(i) for i in player_ind2))
-
-player1 = list(df1_1['Player'].drop_duplicates())
-#player1=sorted(player1)
-player1_choice = st.sidebar.selectbox(
-    "Select player 1:", player1, index=player_ind)
-
-player2_choice = st.sidebar.selectbox(
-    "Select player 2:", player1, index=player_ind2)
-
-players_hold=df1_2['Player']
-
-num_cols = df1_1.select_dtypes([np.number]).columns
-rankdf = df1_1[num_cols].rank(0,ascending=True, pct=True,method='average')*100
-rankdf=pd.DataFrame(rankdf, columns=[param1,param2,param3,param4,param5,param6,
-                               param7,param8,param9,param10,param11,param12,param13,param14])
-rankdf=pd.concat([players_hold,rankdf], axis=1).reset_index(drop=True)
-
-
-ranges = []
-a_values = []
-b_values = []
-
-for x in params:
-    a = min(rankdf[params][x])
-    #a = a - (a*.25)
-    
-    b = max(rankdf[params][x]) 
-    #b = b + (b*.25)
-    
-    ranges.append((a,b))
-    
-for x in range(len(rankdf['Player'])):
-    if rankdf['Player'][x] == player1_choice:
-        a_values = rankdf.iloc[x].values.tolist()
-    if rankdf['Player'][x] == player2_choice:
-        b_values = rankdf.iloc[x].values.tolist()
-        
-a_values = a_values[1:]
-b_values = b_values[1:]
-
-values = [a_values,b_values]
-
-a_values=list(map(int, a_values))
-b_values=list(map(int, b_values))
-
-st.markdown("###  Selected: " + league_choice + " - " + position_choice)
+st.subheader(league_choice + " - " + position_choice)
 
 fig = plt.figure(figsize=(10,10),constrained_layout=True)
 gs = fig.add_gridspec(nrows=1,ncols=1)
@@ -278,14 +208,95 @@ cols= ['Player','Team','Age','Contract expires','Rank','Status']
 df3 = df3[cols].reset_index(drop=True)
 
 ### COMPARISON RADAR
+st.sidebar.write("Choose players to compare:")
+
+index = df1_1.index
+condition = df1_1["Rank"] == 1
+player_ind = index[condition]
+player_ind=player_ind.tolist()
+
+player_ind_b = ((af.League.values == league_choice) & (af["Focus Position"].values == position_choice)).argmax()
+player_ind_b = [player_ind_b]
+
+if len(player_ind)>0:
+    player_ind=player_ind
+else:
+    player_ind=player_ind_b#[0]
+player_ind = int(''.join(str(i) for i in player_ind))
+
+
+condition2 = df1_1["Rank"] == 2
+player_ind2 = index[condition2]
+player_ind2=player_ind2.tolist()
+
+player_ind2_b = ((af.League.values == league_choice) & (af["Focus Position"].values == position_choice)).argmax()+1
+player_ind2_b = [player_ind2_b]
+
+if len(player_ind2)>0:
+    player_ind2=player_ind2
+else:
+    player_ind2=player_ind2_b#[1]
+player_ind2 = int(''.join(str(i) for i in player_ind2))
+
+
+player1 = list(af['Player'].drop_duplicates())
+#player1=sorted(player1)
+player1_choice = st.sidebar.selectbox(
+    "Select player 1:", player1, index=player_ind)
+
+player2_choice = st.sidebar.selectbox(
+    "Select player 2:", player1, index=player_ind2)
+
+
+params = [param1,param2,param3,param4,param5,param6,
+                               param7,param8,param9,param10,param11,param12,param13,param14]
+
+params2 = ['Def duels\np90','Def duels\nwon%','PAdj\nInterceptions','Received pass\np90','Passes to\npen area p90','Passes to final\n3rd p90',
+                               'Prog. passes\np90','Accurate\npasses %','Prog runs\np90','Avg pass\nlength (m)',
+                               "% of passes\nprogressive",'xA p90','xG p90','Shots p90']
+
+
+def get_league(player,df):
+    league=df.loc[df['Player'] ==player,'League']#.to_string(index=False)
+    league=league.head(1).item()
+    position=position_choice #df.loc[df['Player'] ==player,'Focus Position']#.to_string(index=False)
+    #position=position.head(1).item()
+    radar=df.loc[(df['League']==league) & (df['Focus Position']==position)]
+    players_hold=radar['Player']
+    num_cols = radar.select_dtypes([np.number]).columns
+    radardf = radar[num_cols].rank(0,ascending=True, pct=True,method='average')*100
+    radardf=pd.DataFrame(radardf, columns=[param1,param2,param3,param4,param5,param6,
+                               param7,param8,param9,param10,param11,param12,param13,param14])
+    radardf=pd.concat([players_hold,radardf], axis=1).reset_index(drop=True)
+    return(radardf)
+
+radar1=get_league(player1_choice,df)
+radar2=get_league(player2_choice,df)
+
+
+#WORK FROM HERE
+    
+
+def get_ranges(rankdf,player):
+    a_values = []
+    
+    for x in range(len(rankdf['Player'])):
+        if rankdf['Player'][x] == player:
+            a_values = rankdf.iloc[x].values.tolist()
+        
+    a_values = a_values[1:]
+
+    a_values=list(map(int, a_values))
+    
+    return(a_values)
+
+a_values1=get_ranges(radar1,player1_choice)
+a_values2=get_ranges(radar2,player2_choice)
+
 
 fig1 = plt.figure(figsize=(10,18),constrained_layout=True)
 gs = fig1.add_gridspec(nrows=1,ncols=2)
 fig1.patch.set_facecolor(bgcolor)
-
-ax1 = fig1.add_subplot(gs[0,0],projection='polar')
-ax1.set_title(label=f"{player1_choice}",x=0.5,y=1.1,size=14,color=textc,ha='center',fontweight='bold')
-
 
 baker = PyPizza(
     params=params2,                  # list of parameters
@@ -299,8 +310,14 @@ baker = PyPizza(
 
 
 # plot pizza
+
+league1=df.loc[df['Player'] ==player1_choice,'League']#.to_string(index=False)
+league1=league1.head(1).item()
+ax1 = fig1.add_subplot(gs[0,0],projection='polar')
+ax1.set_title(label=f"{player1_choice}\n{league1}",x=0.5,y=1.1,size=14,color=textc,ha='center',fontweight='bold')
+
 baker.make_pizza(
-    a_values,  # list of values
+    a_values1,  # list of values
     ax=ax1,                # adjust figsize according to your need
     color_blank_space="same",        # use same color to fill blank space
     slice_colors=slice_colors,       # color for individual slices
@@ -323,12 +340,15 @@ baker.make_pizza(
         )
     )                                # values to be used when adding parameter-values
 )
+
+league2=df.loc[df['Player'] ==player2_choice,'League']#.to_string(index=False)
+league2=league2.head(1).item()
 ax2 = fig1.add_subplot(gs[0,1],projection='polar')
-ax2.set_title(label=f"{player2_choice}",x=0.5,y=1.1,size=14,color=textc,ha='center',fontweight='bold')
+ax2.set_title(label=f"{player2_choice}\n{league2}",x=0.5,y=1.11,size=14,color=textc,ha='center',fontweight='bold')
 
 
 baker.make_pizza(
-    b_values,  # list of values
+    a_values2,  # list of values
     ax=ax2,                # adjust figsize according to your need
     color_blank_space="same",        # use same color to fill blank space
     slice_colors=slice_colors,       # color for individual slices
@@ -353,12 +373,12 @@ baker.make_pizza(
 )
 
 fig1.text(
-    0.05, 0.75,s=f"{league_choice} - {position_choice}", size=24,fontfamily=font,
+    0.05, 0.75,s=f"Comparing {position_choice}", size=24,fontfamily=font,
     color=textc
 )
 
 fig1.text(
-    0.05, 0.68,s=f"The percentile rank shows where the player ranks for each attribute\ncompared to his peers and on a scale of 1-100.", size=16,fontfamily=font,
+    0.05, 0.7,s=f"The percentile rank shows where the player ranks for each attribute compared\nto peers within his league - on a scale of 1-100.", size=16,fontfamily=font,
      color=textc
 )
 
@@ -372,3 +392,13 @@ with col2:
     st.write(df3)
     st.subheader("Compare players:")
     st.pyplot(fig1)
+
+st.subheader("Full Data Set: " + league_choice + " - " + position_choice)
+
+
+#player_df = list(df1['Player'].drop_duplicates())
+#player_df_choice = st.sidebar.selectbox(
+ #   "Select a player:", player_df, index=[0])
+
+df1=df1.astype(str)
+st.dataframe(df1,1000,2500)
