@@ -20,7 +20,7 @@ with col1:
 with col2:
     st.title('Dundee United - Player Recruitment')
     
-password_guess = st.text_input('Enter password')  
+password_guess = st.sidebar.text_input('Enter password')  
 if password_guess != 'TannadiceStreet':
      st.stop()
 
