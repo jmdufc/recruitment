@@ -20,9 +20,10 @@ with col1:
 with col2:
     st.title('Dundee United - Player Recruitment')
     
-    
-#st.title(f"Dundee United - Player Recruitment")
-#st.image(image1)
+password_guess = st.text_input('Enter password')  
+if password_guess != 'TannadiceStreet':
+     st.stop()
+
 st.sidebar.image(image1, use_column_width=False)
 
 textc='#1d3557'
