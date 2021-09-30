@@ -15,11 +15,7 @@ st.set_page_config(
      page_title="Player Recruitment",
      layout="wide",
      )
-col1, mid, col2 = st.columns([1,0.5,20])
-with col1:
-    st.image(image1)
-with col2:
-    st.title('Dundee United - Player Recruitment - Manual upload')
+st.title('Player Recruitment - Manual data upload')
     
     
 #st.title(f"Dundee United - Player Recruitment")
