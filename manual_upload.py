@@ -15,7 +15,7 @@ st.set_page_config(
      page_title="Player Recruitment",
      layout="wide",
      )
-col1, mid, col2 = st.beta_columns([1,0.5,20])
+col1, mid, col2 = st.columns([1,0.5,20])
 with col1:
     st.image(image1)
 with col2:
@@ -319,7 +319,7 @@ fig1.text(
      color=textc
 )
 
-col1, col2 =st.beta_columns(2)
+col1, col2 =st.columns(2)
 
 with col1:
     st.write("Blue bars represent league average")
