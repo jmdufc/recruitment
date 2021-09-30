@@ -19,7 +19,7 @@ col1, mid, col2 = st.columns([1,0.5,20])
 with col1:
     st.image(image1)
 with col2:
-    st.title('Dundee United - Player Recruitment')
+    st.title('Dundee United - Player Recruitment - Manual upload')
     
     
 #st.title(f"Dundee United - Player Recruitment")
