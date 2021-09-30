@@ -68,7 +68,7 @@ def get_data(file):
 df=get_data(data)
 df['Contract expires'] = df['Contract expires'].astype(str)
 df["% of passes progressive"]=df["Progressive passes per 90"]/df["Passes per 90"]*100
-df['color'] = np.where(df['Rank']>=1, color1, color5)
+df['color'] = np.where(df['Rank']>=1, color5, color1)
 df=df.fillna(0)
 
 
@@ -147,7 +147,7 @@ min1 = df1_1[var1].min()
 min2 = df1_1[var2].min()
 
 
-ax1.scatter(x1, y2, color=df1.color,edgecolor=df1.color,alpha=0.75, s=100,zorder=4)
+ax1.scatter(x1, y2, color=df1.color,edgecolor=df1.color,alpha=0.5, s=100,zorder=4)
 
 ax1.plot([min1,max1],[mean2,mean2],color=color2,lw=50,alpha=0.25)
 ax1.plot([mean1,mean1],[min2,max2],color=color2,lw=50,alpha=0.25)
