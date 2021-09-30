@@ -63,7 +63,7 @@ param14='Shots per 90'
 
 data = st.sidebar.file_uploader("Upload player comparison file")
 if data is not None:
-    df=pd.read_excel(data).fillna(0)
+    df = pd.read_excel(data,engine='openpyxl')
 else:
     st.write("You must upload a file")
     st.stop()
