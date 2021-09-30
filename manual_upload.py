@@ -61,7 +61,7 @@ data = st.sidebar.file_uploader("Upload player comparison file")
 if data is not None:
     df = pd.read_excel(data,engine='openpyxl')
 else:
-    st.write("You must upload a file")
+    st.write("Upload any file from WyScout - remember to set filter for minutes played.")
     st.stop()
 
 
