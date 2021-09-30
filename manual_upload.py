@@ -68,6 +68,7 @@ else:
 df['Contract expires'] = df['Contract expires'].astype(str)
 df["% of passes progressive"]=df["Progressive passes per 90"]/df["Passes per 90"]*100
 df=df.fillna(0)
+dfradar=df
 
 df2=df.iloc[:,9:]
 metrics=df2.columns.tolist()
@@ -105,11 +106,8 @@ st.subheader("")
 fig = plt.figure(figsize=(10,10),constrained_layout=True)
 gs = fig.add_gridspec(nrows=1,ncols=1)
 fig.patch.set_facecolor(bgcolor)
-
 ax1 = fig.add_subplot(gs[0])
-
 ax1.set_title(label=f"Scatter Plot: {metric1} vs {metric2}",x=0.5,y=1.05,size=20,color=textc,ha='center',fontweight='bold')
-#ax1.text(s=f"Blue bars represent league average",x=0.05,y=0,size=10,color=textc)
 
 var1=metric1
 var2=metric2
@@ -117,12 +115,12 @@ var2=metric2
 x1 = df[var1]
 y2 = df[var2]
 
-mean1 = df[var1].mean()
-mean2 = df[var2].mean()
-max1 = df[var1].max()
-max2 = df[var2].max()
-min1 = df[var1].min()
-min2 = df[var2].min()
+mean1 = dfradar[var1].mean()
+mean2 = dfradar[var2].mean()
+max1 = dfradar[var1].max()
+max2 = dfradar[var2].max()
+min1 = dfradar[var1].min()
+min2 = dfradar[var2].min()
 
 
 ax1.scatter(x1, y2, color=color1,edgecolor=color3,alpha=0.5, s=100,zorder=4)
@@ -184,7 +182,7 @@ st.sidebar.write("Choose players to compare:")
 
 
 
-player1 = list(df['Player'].drop_duplicates())
+player1 = list(dfradar['Player'].drop_duplicates())
 
 player1_choice = st.sidebar.selectbox(
     "Select player 1:", player1, index=0)
@@ -210,7 +208,7 @@ def get_percentile(df):
     radardf=pd.concat([players_hold,radardf], axis=1).reset_index(drop=True)
     return(radardf)
 
-radar1=get_percentile(df)
+radar1=get_percentile(dfradar)
 
 
 def get_ranges(df,player):
